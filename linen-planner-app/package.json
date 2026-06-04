@@ -2,13 +2,24 @@
   "name": "linen-planner-app",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
-  "description": "Linen Paper Co. — undated digital planner, standalone interactive HTML web-app.",
+  "description": "Linen Paper Co. — undated digital planner",
+  "main": "main.js",
   "scripts": {
-    "build:planner": "node build/build-planner.mjs"
+    "build:planner": "node build/build-planner.mjs",
+    "start": "electron .",
+    "dist": "electron-builder --mac dmg"
+  },
+  "build": {
+    "appId": "com.linenplanner.app",
+    "productName": "Linen Planner",
+    "mac": {
+      "target": "dmg"
+    }
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "playwright": "^1.60.0"
+    "playwright": "^1.60.0",
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.0"
   }
 }

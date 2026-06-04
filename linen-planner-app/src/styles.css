@@ -1,0 +1,324 @@
+/* ============================================================
+   Linen Paper Co. — runtime styles
+   Page canvas is a fixed 1080x810 stage, scaled to the viewport.
+   Theme colors come from html[data-theme] (--c-tint/mid/deep/ink).
+   --c-paper is the shared cream and is theme-independent.
+   ============================================================ */
+
+:root { --c-paper: #F5EFE6; --toolbar-h: 46px; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+/* themed scrollbars (match the planner aesthetic) */
+* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-deep) 38%, transparent) transparent; }
+*::-webkit-scrollbar { width: 7px; height: 7px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--c-deep) 34%, transparent);
+  border-radius: 8px; border: 1px solid transparent; background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--c-deep) 56%, transparent); background-clip: content-box; }
+*::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
+body {
+  background: #d9d2c6;
+  font-family: 'Jost', system-ui, sans-serif;
+  color: var(--c-ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- top utility toolbar (added by runtime) ---------- */
+#lp-toolbar {
+  position: fixed; inset: 0 0 auto 0; height: var(--toolbar-h);
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 12px; z-index: 50;
+  background: #fbf8f2; border-bottom: 1px solid #e3dccf;
+  font-family: 'Jost', sans-serif; font-size: 13px; color: #4a4234;
+  overflow-x: auto; white-space: nowrap;
+}
+#lp-toolbar .brand {
+  font-family: 'Cormorant Garamond', serif; font-size: 19px;
+  font-weight: 600; letter-spacing: .3px; margin-right: 6px;
+}
+#lp-toolbar button {
+  font-family: 'Jost', sans-serif; font-size: 12.5px; color: #4a4234;
+  background: transparent; border: 1px solid #ddd5c6; border-radius: 14px;
+  padding: 4px 10px; cursor: pointer;
+}
+#lp-toolbar button:hover { background: #f0eadf; }
+#lp-toolbar .spacer { flex: 1; }
+#lp-toolbar .pagelabel {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 16px; min-width: 120px; text-align: center; color: #3a3328;
+}
+#lp-toolbar .nav-arrow { border-radius: 50%; width: 26px; height: 26px; padding: 0; }
+#lp-toolbar .dots { display: inline-flex; gap: 5px; align-items: center; }
+#lp-toolbar .dot {
+  width: 15px; height: 15px; border-radius: 50%; border: 1px solid #00000022;
+  cursor: pointer; padding: 0;
+}
+#lp-toolbar .dot.active { outline: 2px solid #4a4234; outline-offset: 1px; }
+#lp-toolbar .sep { width: 1px; height: 20px; background: #e0d8c9; margin: 0 4px; }
+
+/* ---------- fit / stage / scaling ---------- */
+#lp-fit {
+  position: absolute; left: 50%; top: calc(var(--toolbar-h) + 8px);
+  transform: translateX(-50%);
+}
+#lp-stage {
+  position: relative; width: 1080px; height: 810px;
+  transform-origin: top center;
+}
+
+/* ---------- page ---------- */
+.lp-page {
+  position: absolute; inset: 0; width: 1080px; height: 810px;
+  background: var(--c-paper); color: var(--c-ink);
+  display: none; overflow: hidden;
+  box-shadow: 0 6px 30px #00000026;
+}
+.lp-page.is-active { display: block; }
+.lp-page .pad { position: absolute; inset: 0; padding: 30px 40px; }
+
+/* ---------- typography primitives ---------- */
+.lp-h { font-family: 'Cormorant Garamond', serif; font-weight: 500; line-height: 1.02; }
+.lp-display { font-size: 58px; font-weight: 600; }
+.lp-title { font-size: 40px; }
+.lp-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+.lp-eyebrow {
+  font-family: 'Jost', sans-serif; font-weight: 400; font-size: 10px;
+  letter-spacing: 3px; text-transform: uppercase; color: color-mix(in srgb, var(--c-ink) 78%, transparent);
+}
+.lp-label {
+  font-family: 'Jost', sans-serif; font-weight: 400; font-size: 9px;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: color-mix(in srgb, var(--c-ink) 72%, transparent);
+}
+.rule { height: 1px; background: color-mix(in srgb, var(--c-deep) 45%, transparent); border: 0; }
+.muted { color: color-mix(in srgb, var(--c-ink) 72%, transparent); }
+.accent { color: var(--c-deep); }
+
+/* ---------- in-page TopNav ---------- */
+.lp-topnav {
+  position: absolute; top: 0; left: 0; right: 64px; height: 56px;
+  display: flex; align-items: center; padding: 0 30px; gap: 8px;
+}
+.lp-topnav .nav-brand {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 22px; font-weight: 500; margin-right: auto;
+}
+.lp-topnav a.tab {
+  font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: .5px;
+  color: var(--c-ink); text-decoration: none;
+  padding: 6px 14px; border-radius: 16px; border: 1px solid transparent;
+}
+.lp-topnav a.tab:hover { border-color: color-mix(in srgb, var(--c-deep) 30%, transparent); }
+.lp-topnav a.tab.cur { background: var(--c-deep); color: var(--c-paper); }
+.lp-topnav .theme-meta {
+  margin-left: 16px;
+  font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: color-mix(in srgb, var(--c-ink) 55%, transparent);
+  white-space: nowrap;
+}
+
+/* ---------- SideTabs (right vertical) ---------- */
+.lp-sidetabs {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 56px;
+  display: flex; flex-direction: column;
+  border-left: 1px solid color-mix(in srgb, var(--c-deep) 18%, transparent);
+}
+.lp-sidetabs a {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  text-decoration: none; color: color-mix(in srgb, var(--c-ink) 55%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--c-deep) 12%, transparent);
+}
+.lp-sidetabs a span {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.lp-sidetabs a.cur { background: var(--c-deep); }
+.lp-sidetabs a.cur span { color: var(--c-paper); }
+
+/* ---------- fields ---------- */
+.lp-field, .lp-area {
+  font-family: 'Jost', sans-serif; font-size: 13px; color: var(--c-ink);
+  background: transparent; border: 0; outline: none; width: 100%;
+}
+.lp-field { border-bottom: 1px solid color-mix(in srgb, var(--c-deep) 58%, transparent); padding: 2px 2px; }
+.lp-field:focus { border-color: var(--c-deep); }
+.lp-field.catbud, .lp-field.bcval { width: 46px; display: inline-block; text-align: right; }
+.ledger .amt .lp-field { text-align: right; }
+.lp-area { resize: none; line-height: 1.7; padding: 2px; }
+.lp-field::placeholder, .lp-area::placeholder { color: color-mix(in srgb, var(--c-ink) 52%, transparent); }
+
+/* ---------- checkboxes (.lp-cb) ---------- */
+.lp-cb {
+  -webkit-appearance: none; appearance: none; cursor: pointer;
+  width: 14px; height: 14px; border-radius: 3px;
+  border: 1.5px solid color-mix(in srgb, var(--c-deep) 70%, transparent);
+  background: transparent; vertical-align: middle; position: relative; flex: none;
+}
+.lp-cb:checked { background: var(--c-mid); border-color: var(--c-deep); }
+.lp-cb:checked::after {
+  content: ''; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px; border: solid var(--c-paper);
+  border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+
+/* ---------- custom toggles (.lp-toggle + .lp-tg) ---------- */
+.lp-tgl { display: inline-flex; cursor: pointer; }
+.lp-toggle { position: absolute; opacity: 0; width: 0; height: 0; }
+.lp-tg {
+  display: inline-block; width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--c-deep) 60%, transparent);
+  background: transparent; transition: background .12s, border-color .12s;
+}
+.lp-toggle:checked + .lp-tg { background: var(--c-mid); border-color: var(--c-deep); }
+.lp-tg.sq { border-radius: 4px; }
+.lp-tg.lg { width: 26px; height: 26px; }
+/* water cup variant: a glass/drop outline that fills when checked */
+.lp-tg.cup {
+  width: 20px; height: 24px; border-radius: 0 0 9px 9px / 0 0 11px 11px;
+  border: 1.5px solid color-mix(in srgb, var(--c-deep) 62%, transparent);
+}
+.lp-toggle:checked + .lp-tg.cup { background: var(--c-mid); border-color: var(--c-deep); }
+
+/* ---------- generic boxes / cards ---------- */
+.card {
+  border: 1px solid color-mix(in srgb, var(--c-deep) 38%, transparent);
+  border-radius: 10px; background: color-mix(in srgb, var(--c-mid) 14%, transparent);
+}
+.fill-tint { background: var(--c-tint); }
+.stat { text-align: center; }
+.stat .big { font-family: 'Cormorant Garamond', serif; font-size: 30px; }
+
+/* ---------- calendar grid (month / year) ---------- */
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal .dow {
+  font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: color-mix(in srgb, var(--c-ink) 50%, transparent);
+  padding: 4px 6px; text-align: left;
+}
+.cal a.cell {
+  border-top: 1px solid color-mix(in srgb, var(--c-deep) 30%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--c-deep) 30%, transparent);
+  min-width: 0; overflow: hidden; padding: 5px 7px; text-decoration: none;
+  color: var(--c-ink); display: block;
+}
+.cal a.cell:hover { background: color-mix(in srgb, var(--c-mid) 10%, transparent); }
+.cal a.cell .n { font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+.cal a.cell .lp-daypreview {
+  display: block; font-family: 'Jost', sans-serif; font-size: 9px;
+  color: var(--c-deep); margin-top: 2px; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- weekly grid ---------- */
+.wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0; }
+.wk .col { min-width: 0; border-left: 1px solid color-mix(in srgb, var(--c-deep) 14%, transparent); padding: 6px; }
+.wk .col:first-child { border-left: 0; }
+.wk .col .dh { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.wk .col .dh .d { font-family: 'Cormorant Garamond', serif; font-size: 20px; }
+.wk .col .row { display: flex; align-items: center; gap: 6px; padding: 5px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-deep) 10%, transparent); }
+.wk .col .row .lp-field { font-size: 11px; }
+
+/* ---------- habit tracker grid ---------- */
+.habitgrid { display: grid; grid-template-columns: 130px 1fr 34px; align-items: center; }
+.habitgrid .hname { min-width: 0; overflow: hidden; }
+.habitgrid .hname .lp-field { font-size: 11px; }
+.habitgrid .days { display: grid; grid-template-columns: repeat(31, minmax(0, 1fr)); gap: 2px; }
+.habitgrid .days .lp-tgl { justify-content: center; }
+.habitgrid .days .lp-tg { width: 12px; height: 12px; }
+.habitgrid .hsum { text-align: right; font-family: 'Cormorant Garamond', serif; font-size: 14px; }
+.habitgrid .colnums { display: grid; grid-template-columns: repeat(31, minmax(0, 1fr)); gap: 2px; }
+.habitgrid .colnums span { font-size: 7px; text-align: center; color: color-mix(in srgb, var(--c-ink) 45%, transparent); }
+
+/* ---------- progress bars ---------- */
+.bar { height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--c-deep) 14%, transparent); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--c-mid); width: 0; }
+
+/* ---------- ledger ---------- */
+.ledger { display: flex; flex-direction: column; min-height: 0; }
+.ledger .lhead, .ledger .lrow {
+  display: grid; grid-template-columns: 44px 1fr 110px 90px; gap: 8px;
+  align-items: center; padding: 4px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-deep) 12%, transparent);
+}
+.ledger .lhead { color: color-mix(in srgb, var(--c-ink) 50%, transparent); }
+.ledger .lrows { overflow-y: auto; min-height: 0; }
+.ledger .lrow .lp-field { font-size: 12px; }
+.ledger .amt { text-align: right; }
+
+/* ---------- notes backgrounds ---------- */
+.ruled-bg {
+  background-image: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 27px,
+    color-mix(in srgb, var(--c-deep) 16%, transparent) 27px,
+    color-mix(in srgb, var(--c-deep) 16%, transparent) 28px);
+}
+.dotted-bg {
+  background-image: radial-gradient(color-mix(in srgb, var(--c-deep) 28%, transparent) 1px, transparent 1.4px);
+  background-size: 20px 20px;
+}
+.notes-area { position: relative; }
+.notes-area .lp-area { position: absolute; inset: 0; background: transparent; line-height: 28px; }
+
+/* ---------- cover ---------- */
+.cover-wheel { display: flex; gap: 10px; }
+.cover-wheel .cw {
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  border: 1px solid #00000022;
+}
+.cover-wheel .cw.active { outline: 2px solid var(--c-deep); outline-offset: 2px; }
+
+/* ---------- index directory ---------- */
+.dir { display: flex; flex-direction: column; }
+.dir a {
+  display: grid; grid-template-columns: 28px 1fr auto 16px; gap: 10px;
+  align-items: center; text-decoration: none; color: var(--c-ink);
+  padding: 9px 4px; border-bottom: 1px solid color-mix(in srgb, var(--c-deep) 12%, transparent);
+}
+.dir a:hover { background: color-mix(in srgb, var(--c-mid) 9%, transparent); }
+.dir a .num { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: color-mix(in srgb, var(--c-ink) 50%, transparent); }
+.dir a .nm { font-size: 13px; }
+.dir a .meta { font-size: 10px; color: color-mix(in srgb, var(--c-ink) 45%, transparent); letter-spacing: 1px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips a {
+  font-size: 11px; text-decoration: none; color: var(--c-ink);
+  border: 1px solid color-mix(in srgb, var(--c-deep) 28%, transparent);
+  border-radius: 14px; padding: 5px 12px;
+}
+.chips a:hover { background: color-mix(in srgb, var(--c-mid) 12%, transparent); }
+.month-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+.month-grid a {
+  text-decoration: none; color: var(--c-ink); min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--c-deep) 18%, transparent);
+  border-radius: 8px; padding: 8px 10px;
+}
+.month-grid a:hover { background: color-mix(in srgb, var(--c-mid) 9%, transparent); }
+.month-grid a .mn { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; }
+.month-grid a .mi { font-size: 9px; color: color-mix(in srgb, var(--c-ink) 45%, transparent); }
+
+/* mini year calendars */
+.minicals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 18px; }
+.minical .mt { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; margin-bottom: 3px; }
+.minical table { width: 100%; border-collapse: collapse; }
+.minical td, .minical th { font-size: 8px; text-align: center; padding: 1px; color: var(--c-ink); font-weight: 400; }
+.minical th { color: color-mix(in srgb, var(--c-ink) 40%, transparent); font-family: 'Jost', sans-serif; }
+
+/* contextual arrows */
+.ctx-nav { display: inline-flex; gap: 8px; align-items: center; }
+.ctx-nav a { text-decoration: none; color: var(--c-deep); font-size: 12px; }
+
+/* ---------- print ---------- */
+@media print {
+  body { background: #fff; }
+  #lp-toolbar { display: none !important; }
+  #lp-fit { position: static; transform: none !important; left: 0; top: 0; }
+  #lp-stage { transform: none !important; width: 1080px; height: auto; }
+  .lp-page { display: block !important; position: relative; inset: auto;
+    box-shadow: none; page-break-after: always; break-after: page; }
+}
+@page { size: 1080px 810px; margin: 0; }
